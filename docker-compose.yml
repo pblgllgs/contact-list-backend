@@ -1,0 +1,22 @@
+version: '3.8'
+services:
+  postgres_db_contacts:
+    container_name: postgres_db_contacts
+    image: postgres:14-alpine3.18
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: db_contacts
+    ports:
+      - "5432:5432"
+    volumes:
+      - volume_postgres_db_contacts:/var/lib/postgresql/data
+    healthcheck:
+      test: "pg_isready -U postgres | grep 'accepting connections' || exit 1"
+      interval: 2s
+      timeout: 20s
+      retries: 10
+volumes:
+  volume_postgres_db_contacts:
+    external: false

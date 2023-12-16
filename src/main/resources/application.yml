@@ -1,0 +1,27 @@
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/db_contacts
+    username: postgres
+    password: password
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        show_sql: true
+    hibernate:
+      ddl-auto: update
+    database: postgresql
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 1000MB
+      max-request-size: 1000MB
+  mvc:
+    throw-exception-if-no-handler-found: true
+    async:
+      request-timeout: 3600000
+server:
+  port: 8080
