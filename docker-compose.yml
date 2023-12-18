@@ -17,6 +17,45 @@ services:
       interval: 2s
       timeout: 20s
       retries: 10
+    networks:
+      - db_net
+
+  contact-backend:
+    container_name: contact-backend
+    image: pblgllgs/contact-backend:1.0.0
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres_db_contacts:5432/db_contacts
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: "curl --fail --silent localhost:8080/actuator/health | grep UP || exit 1"
+      start_period: 10s
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    depends_on:
+      postgres_db_contacts:
+        condition: service_healthy
+    networks:
+      - spring-net
+      - db_net
+
+  contact-frontend:
+    container_name: contact-frontend
+    image: pblgllgs/contact-frontend:1.0.0
+    environment:
+      REACT_APP_API_BASE_URL_BACKEND: http://contact-backend:8080/contacts
+    ports:
+      - "3000:80"
+    depends_on:
+      contact-backend:
+        condition: service_started
+    networks:
+      - spring-net
+
+networks:
+  spring-net:
+  db_net:
 volumes:
   volume_postgres_db_contacts:
     external: false
